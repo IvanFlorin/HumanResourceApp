@@ -92,7 +92,7 @@ public abstract class Menu {
         return scanner.nextLine();
     }
 
-    /*protected Person getPersonByName(){
+    protected Person getPersonByName(){
         Scanner in = new Scanner(System.in);
         Person match=null;
         do {
@@ -123,7 +123,7 @@ public abstract class Menu {
         }while (match==null);
         return match;
 
-    }*/
+    }
 
     protected Person getPersonByName(EmploymentStatus employmentStatus){
         Scanner in = new Scanner(System.in);

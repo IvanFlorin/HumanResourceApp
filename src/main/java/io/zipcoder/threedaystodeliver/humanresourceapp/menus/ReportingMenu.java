@@ -85,10 +85,10 @@ public class ReportingMenu extends Menu{
                 } while (!"ID".equalsIgnoreCase(input) && !"Name".equalsIgnoreCase(input));
 
                 if ("ID".equalsIgnoreCase(input)){
-                    personInvolved=getPersonById();
+                    personInvolved= getPersonById();
                 }
                 else{
-                    personInvolved=getPersonByName();
+                    personInvolved = getPersonByName();
                 }
 
                 if(newIncidentReport.getPersonsInvolved().size() == 0 || !newIncidentReport.getPersonsInvolved().contains(personInvolved)) {
