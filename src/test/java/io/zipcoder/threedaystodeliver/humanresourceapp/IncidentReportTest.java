@@ -40,4 +40,12 @@ public class IncidentReportTest {
         ArrayList<String> reportDescriptions = testReport.getDescription();
         Assert.assertEquals("smells bad", reportDescriptions.get(reportDescriptions.size() - 1));
     }
+
+    @Test
+    public void printIncidentForReportTest() {
+        IncidentReport testReport = new IncidentReport(IncidentReport.IncidentCategory.type1, "test description");
+        String expected = "";
+        String actual = testReport.printIncidentForReport();
+        Assert.assertEquals(expected, actual);
+    }
 }

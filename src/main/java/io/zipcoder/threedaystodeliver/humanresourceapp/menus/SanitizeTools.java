@@ -1,6 +1,7 @@
 package io.zipcoder.threedaystodeliver.humanresourceapp.menus;
 
 import io.zipcoder.threedaystodeliver.humanresourceapp.Compensation;
+import io.zipcoder.threedaystodeliver.humanresourceapp.IncidentReport;
 
 import java.time.LocalDate;
 import java.util.Scanner;
@@ -8,6 +9,7 @@ import java.util.Scanner;
 import static io.zipcoder.threedaystodeliver.humanresourceapp.Compensation.compensationType.Hourly;
 import static io.zipcoder.threedaystodeliver.humanresourceapp.Compensation.compensationType.Monthly;
 import static io.zipcoder.threedaystodeliver.humanresourceapp.Compensation.compensationType.Project;
+import static io.zipcoder.threedaystodeliver.humanresourceapp.IncidentReport.IncidentCategory.*;
 
 public class SanitizeTools {
     public static LocalDate getEnforcedLocalDateInput(){
@@ -117,6 +119,37 @@ public class SanitizeTools {
     private static boolean isInputCompensationType(String passedString) {
         String lowerCase = passedString.toLowerCase();
         return ("monthly".equals(lowerCase) || "hourly".equals(lowerCase) || "project".equals(lowerCase));
+    }
+
+    public static IncidentReport.IncidentCategory getEnforcedIncidentCategory() {
+        Scanner in = new Scanner(System.in);
+        IncidentReport.IncidentCategory incidentCategory;
+        String sInput;
+        do {
+            sInput = in.nextLine();
+            if (!isInputIncidentCategory(sInput)) {
+                System.out.println("Please enter " + type1 + ", " + type2 + ", " + type3 + ", or " + type4);
+            }
+        }while (!isInputIncidentCategory(sInput));
+
+        String lowerCase = sInput.toLowerCase();
+        if("type1".equals(lowerCase)) {
+            return type1;
+        }
+        else if("type2".equals(lowerCase)) {
+            return type2;
+        }
+        else if("type3".equals(lowerCase)) {
+            return type3;
+        }
+        else {
+            return type4;
+        }
+    }
+
+    private static boolean isInputIncidentCategory(String passedString) {
+        String lowerCase = passedString.toLowerCase();
+        return ("type1".equals(lowerCase) || "type2".equals(lowerCase) || "type3".equals(lowerCase) || "type4".equals(lowerCase));
     }
 
 
