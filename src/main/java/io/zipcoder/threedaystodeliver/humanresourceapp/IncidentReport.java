@@ -59,4 +59,20 @@ public class IncidentReport {
         description.add(nextDescription);
     }
 
+    public String printIncidentForReport() {
+        String report = String.format("ID: %d\nCategory: %s", getId(), getIncidentCategory());
+
+        if(getPersonsInvolved().size() > 0 ) {
+            for(int i = 1; i <= getPersonsInvolved().size(); i++) {
+                report += "\nPerson " + i + ": " + getPersonsInvolved().get(i - 1).getId() + " " +getPersonsInvolved().get(i - 1).getContactInfo().getName();
+            }
+        }
+
+        report += "\nDescription: ";
+        for(int i = 0; i < getDescription().size(); i++) {
+            report += getDescription().get(i) + "\n";
+        }
+        return report;
+    }
+
 }

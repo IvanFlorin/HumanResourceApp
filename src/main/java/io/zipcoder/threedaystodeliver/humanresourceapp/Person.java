@@ -15,7 +15,7 @@ public class Person {
     private EmploymentStatus employmentStatus;
     private Compensation compensation;
     private LocalDate hiredDate;
-    private ArrayList<IncidentReport> incidentReports;
+    private ArrayList<IncidentReport> incidentReports = new ArrayList<>(10);
 
     //former
     private LocalDate terminationDate;
