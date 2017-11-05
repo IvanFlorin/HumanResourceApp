@@ -33,12 +33,14 @@ public class Compensation {
 
         String formattedEmployeeData = "";
 
-        formattedEmployeeData += String.format("SALARY: $%.2f per ", payrate);
+        formattedEmployeeData += String.format("PAY: $%.2f per ", payrate);
         if(compensationType.Monthly.equals(compensationType)) {
             formattedEmployeeData += "month";
         }
-        else {
+        else if(compensationType.Hourly.equals(compensationType)){
             formattedEmployeeData += "hour";
+        } else {
+            formattedEmployeeData += "project";
         }
 
         formattedEmployeeData += String.format("\nBONUS: %.1f%%", bonus);

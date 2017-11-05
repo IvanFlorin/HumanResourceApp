@@ -9,7 +9,7 @@ public class StreetAddressTest {
     @Test
     public void testConstructorAndToString(){
         StreetAddress addy = new StreetAddress("1234 Main Street", "Apt 2B", "Anycity", "ME", "12345");
-        String expected = "1234 Main Street\nApt 2B\nAnycity ME, 12345\n\n";
+        String expected = "Address:\n1234 Main Street\nApt 2B\nAnycity, ME, 12345\n\n";
         String actual = addy.toString();
         Assert.assertEquals(expected, actual);
     }
@@ -18,7 +18,7 @@ public class StreetAddressTest {
     public void testChangeStreetAddress(){
         StreetAddress addy = new StreetAddress();
         addy.changeStreetAddress("1234 Main Street", "Apt 2B", "Anycity", "ME", "12345");
-        String expected = "1234 Main Street\nApt 2B\nAnycity ME, 12345\n\n";
+        String expected = "Address:\n1234 Main Street\nApt 2B\nAnycity, ME, 12345\n\n";
         String actual = addy.toString();
         Assert.assertEquals(expected, actual);
     }

@@ -28,6 +28,7 @@ public abstract class Menu {
     public void display() {
         String userInput;
         do {
+            System.out.printf("\n\n===== %s =====\n", getClass().getSimpleName());
             userInput = this.getMenuInput().toUpperCase();
             try {
                 selectOption(userInput);
@@ -77,7 +78,7 @@ public abstract class Menu {
 
     public String getMenuInput() {
         Scanner scanner = new Scanner(System.in);
-        System.out.printf("===== %s =====\n", getClass().getSimpleName());
+
         System.out.println("Type in your selection to proceed:");
         for (Enum e : menuOptions) {
             System.out.printf("[ %s ] ", e.name());
@@ -91,7 +92,7 @@ public abstract class Menu {
         return scanner.nextLine();
     }
 
-    protected Person getPersonByName(){
+    /*protected Person getPersonByName(){
         Scanner in = new Scanner(System.in);
         Person match=null;
         do {
@@ -122,6 +123,39 @@ public abstract class Menu {
         }while (match==null);
         return match;
 
+    }*/
+
+    protected Person getPersonByName(EmploymentStatus employmentStatus){
+        Scanner in = new Scanner(System.in);
+        Person match=null;
+        do {
+            System.out.println("Enter Name: ");
+            String name = in.nextLine();
+            ArrayList<Person> matchList = personWarehouse.getPersonByName(name, employmentStatus);
+            if (matchList.size()==0) {
+                System.out.println("Invalid Name. Choices: \n");
+                personWarehouse.printAllOfType(employmentStatus);
+            }
+            else if (matchList.size()==1){
+                match=matchList.get(0);
+            }
+            else
+            {
+                do {
+                    System.out.println("Multiple matches for " + name + ". Choose ID from choices below:\n");
+                    for (Person p : matchList) {
+                        System.out.println(p.toString());
+                    }
+                    match = getPersonById(employmentStatus);
+                    if (!name.equalsIgnoreCase(match.getContactInfo().getName())) {
+                        System.out.println("That ID doesn't match any person named " + name);
+                    }
+                }while (!name.equalsIgnoreCase(match.getContactInfo().getName()) );
+            }
+
+        }while (match==null);
+        return match;
+
     }
 
     protected Person getPersonById(){
@@ -139,24 +173,39 @@ public abstract class Menu {
         return match;
     }
 
+    protected Person getPersonById(EmploymentStatus employmentStatus){
+        Scanner in = new Scanner(System.in);
+        Person match=null;
+        do {
+            System.out.println("Enter ID: ");
+            String id = in.nextLine();
+            match = personWarehouse.getPersonById(id, personWarehouse.getAllOfType(employmentStatus));
+            if (match == null) {
+                System.out.println("Invalid ID. Choices: \n");
+                personWarehouse.printAllOfType(employmentStatus);
+            }
+        }while (match==null);
+        return match;
+    }
+
     protected Compensation changeCompensation() {
         System.out.println("Enter paid Monthly/Hourly/Project: ");
         Compensation.compensationType inputPayType = getEnforcedCompensationType();
-        System.out.print("Enter payment per applicable period: ");
+        System.out.println("Enter payment per applicable period: ");
         double inputSalary = getEnforcedPositiveDoubleInput();
-        System.out.print("Enter bonus: ");
+        System.out.println("Enter bonus: ");
         double inputBonus = getEnforcedPositiveDoubleInput();
-        System.out.print("Enter PTO for the year: ");
+        System.out.println("Enter PTO for the year: ");
         double inputPTO = getEnforcedPositiveDoubleInput();
-        System.out.print("Opt in to medical coverage? y/n: ");
+        System.out.println("Opt in to medical coverage? y/n: ");
         String inputMedical = getUserInput();
-        System.out.print("Opt in to dental coverage? y/n: ");
+        System.out.println("Opt in to dental coverage? y/n: ");
         String inputDental = getUserInput();
-        System.out.print("Opt in to vision coverage? y/n: ");
+        System.out.println("Opt in to vision coverage? y/n: ");
         String inputVision = getUserInput();
-        System.out.print("Opt in to prescription coverage? y/n: ");
+        System.out.println("Opt in to prescription coverage? y/n: ");
         String inputPrescription = getUserInput();
-        System.out.print("Enter retirement match %: ");
+        System.out.println("Enter retirement match %: ");
         double inputRetirementMatch = getEnforcedPositiveDoubleInput();
 
         Compensation newCompensation = new Compensation();

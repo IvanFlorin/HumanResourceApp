@@ -1,6 +1,8 @@
 package io.zipcoder.threedaystodeliver.humanresourceapp.menus;
 
+import io.zipcoder.threedaystodeliver.humanresourceapp.EmploymentStatus;
 import io.zipcoder.threedaystodeliver.humanresourceapp.Person;
+import io.zipcoder.threedaystodeliver.humanresourceapp.PersonWarehouse;
 
 import java.util.ArrayList;
 
@@ -18,15 +20,15 @@ public class ReportingMenu extends Menu{
     public void selectOption(String userInput) {
         switch (ReportingSelectionOptions.valueOf(userInput)){
             case PROSPECT:
-                printAllProspects();
+                PersonWarehouse.getInstance().printAllOfType(EmploymentStatus.PROSPECT);
                 break;
             case EMPLOYEE:
-                printAllEmployees();
+                PersonWarehouse.getInstance().printAllOfType(EmploymentStatus.EMPLOYEE);
                 break;
             case ALL:
-                printAllEmployees();
+                PersonWarehouse.getInstance().printAllOfType(EmploymentStatus.PROSPECT);
                 System.out.println();
-                printAllProspects();
+                PersonWarehouse.getInstance().printAllOfType(EmploymentStatus.EMPLOYEE);
                 break;
             case HOME:
                 return;
@@ -36,37 +38,5 @@ public class ReportingMenu extends Menu{
         }
     }
 
-    public void printAllProspects() {
-        ArrayList<Person> allProspects = personWarehouse.getAllProspects();
 
-        if(allProspects.size() > 0) {
-            System.out.println("PROSPECTS:");
-            String report = Person.printProspectReportHeader();
-            for (Person prospect : allProspects) {
-                report += "\n" + prospect.printProspectForReport();
-            }
-
-            System.out.println(report);
-        }
-        else {
-            System.out.println("No prospects available to report");
-        }
-    }
-
-    public void printAllEmployees() {
-        ArrayList<Person> allEmployees = personWarehouse.getAllEmployees();
-
-        if(allEmployees.size() > 0) {
-            System.out.println("EMPLOYEES:");
-            String report = Person.printEmployeeReportHeader();
-            for (Person employee : allEmployees) {
-                report += "\n" + employee.printEmployeeForReport();
-            }
-
-            System.out.println(report);
-        }
-        else {
-            System.out.println("No employees available to report");
-        }
-    }
 }

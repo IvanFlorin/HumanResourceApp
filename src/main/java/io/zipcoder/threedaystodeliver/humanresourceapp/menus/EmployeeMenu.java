@@ -1,5 +1,6 @@
 package io.zipcoder.threedaystodeliver.humanresourceapp.menus;
 
+import io.zipcoder.threedaystodeliver.humanresourceapp.EmploymentStatus;
 import io.zipcoder.threedaystodeliver.humanresourceapp.HrContactInfo;
 
 import java.time.LocalDate;
@@ -7,10 +8,11 @@ import java.util.ArrayList;
 
 import io.zipcoder.threedaystodeliver.humanresourceapp.Person;
 import io.zipcoder.threedaystodeliver.humanresourceapp.PersonHandler;
+import io.zipcoder.threedaystodeliver.humanresourceapp.PersonWarehouse;
 
 public class EmployeeMenu extends Menu{
 
-    enum EmployeeSelectionOptions { ADD, UPDATE, VIEWALL, HOME, EXIT}
+    enum EmployeeSelectionOptions { ADD, UPDATE, VIEWALL, CLEAR, HOME, EXIT}
 
     public static final EmployeeMenu INSTANCE = new EmployeeMenu();
 
@@ -25,6 +27,7 @@ public class EmployeeMenu extends Menu{
         switch (EmployeeSelectionOptions.valueOf(userInput)){
             case ADD:
                 addNewEmployee();
+                System.out.println("Hired: " + currentPerson.toString());
                 currentPerson=null;
                 //something
                 break;
@@ -32,12 +35,15 @@ public class EmployeeMenu extends Menu{
                 updateEmployee();
                 //
                 break;
+            case CLEAR:
+                currentPerson = null;
+                break;
             case HOME:
                 //go up
                 break;
             case VIEWALL:
                 //
-                viewAllEmployees();
+                viewAllAndSelect(EmploymentStatus.EMPLOYEE);
                 currentPerson=null;
                 break;
             case EXIT:
@@ -47,7 +53,7 @@ public class EmployeeMenu extends Menu{
     }
 
     private void updateEmployee(){
-        if (personWarehouse.getAllEmployees().size()==0)
+        if (personWarehouse.getAllOfType(EmploymentStatus.EMPLOYEE).size()==0)
         {
             System.out.println("There are no employees currently in the system.");
         }
@@ -63,15 +69,15 @@ public class EmployeeMenu extends Menu{
     private void setActiveEmployee() {
         String input;
         do {
-            System.out.println("Find by [ID] or [Name]?");
+            System.out.println("\nFind by [ID] or [Name]?");
             input = this.getUserInput();
         } while (!"ID".equalsIgnoreCase(input) && !"Name".equalsIgnoreCase(input));
 
         if ("ID".equalsIgnoreCase(input)){
-            currentPerson=getPersonById();
+            currentPerson=getPersonById(EmploymentStatus.EMPLOYEE);
         }
         else{
-            currentPerson=getPersonByName();
+            currentPerson=getPersonByName(EmploymentStatus.EMPLOYEE);
         }
     }
 
@@ -80,7 +86,7 @@ public class EmployeeMenu extends Menu{
         do {
             System.out.println("Pick [back] to return to the employee menu.");
             System.out.println("Selected: \n"+currentPerson+"\nPlease pick from the list of update options.\nEnter [ BACK ] when your updates are complete.\n" +
-                    "[ NAME ] [ EMAIL ] [ ADDRESS ] [ PHONE ] [ SCORE ] [ RESUME ] [ ID ] [ INTERVIEW DATE ] [ COMPENSATION ] \n" +
+                    "[ NAME ] [ EMAIL ] [ ADDRESS ] [ PHONE ] [ SCORE ] [ RESUME ] [ ID ] [ INTERVIEW DATE ] [ COMPENSATION ]\n" +
                     "To terminate employee, enter [ TERMINATE ]: ");
             input = this.getUserInput().toLowerCase();
             switch(input) {
@@ -177,13 +183,23 @@ public class EmployeeMenu extends Menu{
 
     ////////
 
-    private void viewAllEmployees(){
-        ArrayList<Person> employeeList = personWarehouse.getAllEmployees();
-
-        for (Person p : employeeList){
-            System.out.println(p);
-            System.out.println("=============================");
-        }
+    private void viewAllAndSelect(EmploymentStatus employmentStatus){
+        PersonWarehouse.getInstance().printAllOfType(employmentStatus);
+        String input = "";
+        String id = "";
+        do {
+            System.out.println("\n[SELECT] "+employmentStatus+" from list or go [BACK]:");
+            input = this.getUserInput();
+            if("BACK".equalsIgnoreCase(input)) {
+                break;
+            } else if ("SELECT".equalsIgnoreCase(input)){
+                setActiveEmployee();
+                System.out.println(currentPerson.getContactInfo().getName()+" selected.");
+                break;
+            } else {
+                System.out.println("Please try again.");
+            }
+        } while (!"BACK".equalsIgnoreCase(input) && !"SELECT".equalsIgnoreCase(input));
     }
 
     private void addNewEmployee(){

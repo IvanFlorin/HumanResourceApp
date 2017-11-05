@@ -3,12 +3,13 @@ package io.zipcoder.threedaystodeliver.humanresourceapp.menus;
 import io.zipcoder.threedaystodeliver.humanresourceapp.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import static io.zipcoder.threedaystodeliver.humanresourceapp.menus.SanitizeTools.getEnforcedLocalDateInput;
 
 public class ProspectMenu extends Menu{
 
-    enum ProspectSelectionOptions { ADD, UPDATE, CLEAR, HOME, EXIT}
+    enum ProspectSelectionOptions { ADD, UPDATE, CLEAR, VIEWALL, HOME, EXIT}
 
     public static final ProspectMenu INSTANCE = new ProspectMenu();
 
@@ -22,10 +23,11 @@ public class ProspectMenu extends Menu{
     public void display(){
         String userInput;
         do {
+            System.out.printf("\n\n===== %s =====\n", getClass().getSimpleName());
             if (currentPerson == null){
-                System.out.println("No prospect selected");
+                System.out.println("\nNo prospect selected");
             } else {
-                System.out.println("Selected prospect: "+currentPerson.getContactInfo().getName());
+                System.out.println("\nSelected prospect: "+currentPerson.getContactInfo().getName());
             }
             userInput = this.getMenuInput().toUpperCase();
             try {
@@ -50,12 +52,34 @@ public class ProspectMenu extends Menu{
             case CLEAR:
                 currentPerson = null;
                 break;
+            case VIEWALL:
+                viewAllAndSelect(EmploymentStatus.PROSPECT);
+                break;
             case HOME:
                 return;
             case EXIT:
                 System.exit(0);
                 return;
         }
+    }
+
+    private void viewAllAndSelect(EmploymentStatus employmentStatus){
+        PersonWarehouse.getInstance().printAllOfType(employmentStatus);
+        String input = "";
+        String id = "";
+        do {
+            System.out.println("\n[SELECT] "+employmentStatus+" from list or go [BACK]:");
+            input = this.getUserInput();
+            if("BACK".equalsIgnoreCase(input)) {
+                break;
+            } else if ("SELECT".equalsIgnoreCase(input)){
+                setActiveProspect();
+                System.out.println(currentPerson.getContactInfo().getName()+" selected.");
+                break;
+            } else {
+                System.out.println("Please try again.");
+            }
+        } while (!"BACK".equalsIgnoreCase(input) && !"SELECT".equalsIgnoreCase(input));
     }
 
     private void addNewProspect(){
@@ -68,42 +92,42 @@ public class ProspectMenu extends Menu{
         HrContactInfo requestedInfo = this.inputAllContactInfo();
         Person newProspect = PersonHandler.createProspect(requestedInfo);
         currentPerson = newProspect;
-        System.out.println("New prospect, " + currentPerson.getContactInfo().getName() + ", added with ID: " +
+        System.out.println("\nNew prospect, " + currentPerson.getContactInfo().getName() + ", added with ID: " +
                 currentPerson.getId()+".");
     }
 
     private void addScore() {
         String input = "";
         do {
-            System.out.println("Please update prospect score. Enter [Add] to do so now or [Skip] to do so later.");
+            System.out.println("\nPlease update prospect score. Enter [Add] to do so now or [Skip] to do so later.");
             input = this.getUserInput();
             if(!"skip".equalsIgnoreCase(input) && "add".equalsIgnoreCase(input)) {
-                System.out.println("Please enter score:");
+                System.out.println("\nPlease enter score:");
                 Double score = SanitizeTools.getEnforcedPositiveDoubleInput();
                 currentPerson.setScore(score);
             } else if ("skip".equalsIgnoreCase(input)){
-                System.out.println("Score update skipped.");
+                System.out.println("\nScore update skipped.");
             } else {
-                System.out.println("Please try again.");
+                System.out.println("\nPlease try again.");
             }
         } while (!"skip".equalsIgnoreCase(input) && !"add".equalsIgnoreCase(input));
     }
 
     private void addResume() {
-        System.out.println("Please add resume. Enter [Skip] to add one later.");
+        System.out.println("\nPlease add resume. Enter [Skip] to add one later.");
         String resume = this.getUserInput();
         if (!"skip".equalsIgnoreCase(resume)){
         currentPerson.setResume(resume);
-        System.out.println("Resume added");
+        System.out.println("\nResume added");
         } else {
-            System.out.println("Resume addition skipped.");
+            System.out.println("\nResume addition skipped.");
         }
     }
 
     private void updateProspect(){
-        if (personWarehouse.getAllProspects().size()==0)
+        if (personWarehouse.getAllOfType(EmploymentStatus.PROSPECT).size()==0)
         {
-            System.out.println("There are no prospects currently in the system.");
+            System.out.println("\nThere are no prospects currently in the system.");
         }
         else {
             if (currentPerson == null) {
@@ -116,24 +140,23 @@ public class ProspectMenu extends Menu{
     private void setActiveProspect() {
         String input;
         do {
-            System.out.println("Find by [ID] or [Name]?");
+            System.out.println("\nFind by [ID] or [Name]?");
             input = this.getUserInput();
         } while (!"ID".equalsIgnoreCase(input) && !"Name".equalsIgnoreCase(input));
 
         if ("ID".equalsIgnoreCase(input)){
-            currentPerson=getPersonById();
+            currentPerson=getPersonById(EmploymentStatus.PROSPECT);
         }
         else{
-            currentPerson=getPersonByName();
+            currentPerson=getPersonByName(EmploymentStatus.PROSPECT);
         }
     }
 
     private void updateProspectField() {
         String input;
         do {
-            System.out.println("Pick [ BACK ] to return to the prospect menu.");
-            System.out.println("Selected: \n"+currentPerson.toString()+"\n Please pick a field to update: ");
-            System.out.println("[ HIRE ] [ SCORE ] [ RESUME ] [ ID ] [ INTERVIEW DATE ] [ NAME ] [ ADDRESS ] [ PHONE ] [ EMAIL ]");
+            System.out.println("\nSelected: \n"+currentPerson+"\nPlease pick from the list of update options.\nEnter [ BACK ] when your updates are complete.\n" +
+            "[ HIRE ] [ SCORE ] [ RESUME ] [ ID ] [ INTERVIEW DATE ] [ NAME ] [ ADDRESS ] [ PHONE ] [ EMAIL ]");
             input = this.getUserInput().toLowerCase();
             switch(input) {
                 case "score":
@@ -195,6 +218,7 @@ public class ProspectMenu extends Menu{
                 case "hire":
                     hireEmployee();
                     System.out.println("Hired: \n"+currentPerson.toString());
+                    currentPerson = null;
                     input = "back";
                     break;
 

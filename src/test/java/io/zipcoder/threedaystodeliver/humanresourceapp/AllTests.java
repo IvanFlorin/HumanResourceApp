@@ -11,7 +11,10 @@ import org.junit.runners.Suite;
         PersonWarehouseTest.class,
         HrContactInfoTest.class,
         StreetAddressTest.class,
-        CompensationTest.class
+        CompensationTest.class,
+        IncidentReportTest.class,
+        //IncidentWarehouseTest.class,
+
 })
 public class AllTests {
 }

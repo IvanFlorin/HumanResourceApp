@@ -32,57 +32,34 @@ public class Person {
 
 ////        private Compensation compensation=new Compensation();
         String returnMe = contactInfo.toString()+
-                "Employee ID:  " + id + "\n" +
-                "Title:  " + title + "\n" +
+                "ID:  " + id + "\n" +
+
                 "Employment Status:  " + employmentStatus + "\n" +
                 "Entrance Interview Date:  " + interviewDate + "\n" +
                 "Resume Abstract:  " + resume + "\n" +
-                "Hire Date:  " + hiredDate + "\n" +
-                "Termination Date:  " + terminationDate + "\n" +
-                "Reason For Termination:  " + reasonForTermination + "\n" +
-                "Exit Interview Notes:  " + exitInterview + "\n" +
-                "Employee Score:  " + score + "\n\n";
+                String.format("Score:  %.2f\n", score);
 
-        if (compensation!=null)
-        {
-            returnMe+= (contactInfo.getName()+"'s Compensation:\n" + compensation.toString() + "\n\n");
-        }
-        else
-        {
-            returnMe+= "\n";
+        if (EmploymentStatus.EMPLOYEE == this.getEmploymentStatus()){
+            returnMe += "Hire Date:  " + hiredDate + "\n";
+            if (compensation!=null)
+            {
+                returnMe+= "Title:  " + title + "\n" +
+                        (contactInfo.getName()+"'s Compensation:\n" + compensation.toString() + "\n\n");
+            }
+            else
+            {
+                returnMe+= "\n";
+            }
         }
 
+        if (EmploymentStatus.TERMINATED == this.getEmploymentStatus()){
+            returnMe += "Termination Date:  " + terminationDate + "\n" +
+                    "Reason For Termination:  " + reasonForTermination + "\n" +
+                    "Exit Interview Notes:  " + exitInterview + "\n";
+        }
         return (returnMe);
-
     }
 
-    public static String printProspectReportHeader() {
-        String report = String.format("%-20s| %-10s| %-10s| %-30s| %-15s", "Name", "ID", "Score", "Resume", "Interview Date");
-        char[] chars = new char[93];
-        Arrays.fill(chars, '_');
-        String line = new String(chars);
-        report += "\n" + line;
-        return report;
-    }
-
-    public String printProspectForReport() {
-        String report = String.format("%-20s| %-10s| %-10.2f| %-30s| %-15s", getContactInfo().getName(), getId(), getScore(), getResume(), getInterviewDate());
-        return report;
-    }
-
-    public static String printEmployeeReportHeader() {
-        String report = String.format("%-20s| %-10s| %-20s| %-11s| %-23s| %-15s", "Name", "ID", "Job Title", "Salary", "Monthly/Hourly/Project", "Date Hired");
-        char[] chars = new char[109];
-        Arrays.fill(chars, '_');
-        String line = new String(chars);
-        report += "\n" + line;
-        return report;
-    }
-
-    public String printEmployeeForReport() {
-        String report = String.format("%-20s| %-10s| %-20s| $%-10.2f| %-23s| %-15s", getContactInfo().getName(), getId(), getTitle(), getCompensation().getPayrate(), getCompensation().getCompensationType(), getHiredDate());
-        return report;
-    }
 
     public void setTitle(String title){
         this.title=title;
